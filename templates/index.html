@@ -1,0 +1,160 @@
+{% extends 'maestra.html' %}
+
+{% block title%} CRUD animales {% endblock%}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col md-12">
+            <div class="jumbotron p-3">
+                <h2>Lista <b>animales</b>
+                    <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#modalAniadir">Añadir animales</button>
+                </h2>
+
+                {% with messages = get_flashed_messages() %}
+
+                {% if messages %}
+
+                {% for message in messages %}
+
+                <div class="alert alert-success alert-dismissable" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                    {{message}}
+                </div>
+
+                {% endfor %}
+
+                {% endif %}
+
+                {% endwith%}
+
+                <table class="table table-hover table-dark">
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Fecha Nacimiento</th>
+                        <th>Edad</th>
+                        <th>Acciones</th>
+                    </tr>
+
+                    {% for animal in animales %}
+
+                    <tr>
+                        <td>{{ animal.id_animal }}</td>
+                        <td>{{ animal.nombre_animal }}</td>
+                        <td>{{ animal.fecha_nacimiento }}</td>
+                        <td>{{ animal.edad }}</td>
+                        <td>
+                            <a href="/editar/{{animal.id_animal}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modalEditar{{animal.id_animal}}">Editar</a>
+                            <a href="/eliminar/{{animal.id_animal}}" class="btn btn-danger" onclick="return confirm('¿Estas seguro?')">Eliminar</a>
+                        </td>
+                    </tr>
+
+<!--Modal para poder editar al animal correspondiente-->
+<div id="modalEditar{{animal.id_animal}}" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Editar animal</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('editar')}}" method="POST">
+
+                    <div class="form-group">
+                        <label>Nombre:</label>
+                        <input type="hidden" name="id" value="{{animal.id_animal}}">
+                        <input type="text" class="form-control" name="nombre" value="{{animal.nombre_animal}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fecha Nacimiento:</label>
+                        <input type="text" class="form-control" name="fecha_nacimiento" value="{{animal.fecha_nacimiento}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Edad:</label>
+                        <input type="text" class="form-control" name="edad" value="{{animal.edad}}">
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Editar</button>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+                    {% endfor %}
+                </table>
+            </div>
+
+<!--Modal para poder añadir animales-->
+            <div id="modalAniadir" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Añadir animal</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{url_for('insertar')}}" method="POST" enctype="multipart/form-data">
+
+                                <div class="form-group">
+                                    <label>Nombre:</label>
+                                    <input type="text" class="form-control" name="nombre" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Fecha Nacimiento:</label>
+                                    <input type="text" class="form-control" name="fecha_nacimiento" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Edad:</label>
+                                    <input type="text" class="form-control" name="edad" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Especie:</label>
+                                    <select class="form-control" name="id_especie" required="1">
+                                        {% for especie in especies %}
+                                            <option value="{{ especie.id_especie }}">{{ especie.nombre_especie }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Hábitat:</label>
+                                    <select class="form-control" name="id_habitat" required="1">
+                                        {% for habitat in habitats %}
+                                            <option value="{{ habitat.id_habitat }}">{{ habitat.nombre_habitat }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Imagen:</label>
+                                    <input type="file" name="imagen" accept="image/*" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Añadir animal</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
