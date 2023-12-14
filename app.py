@@ -48,6 +48,36 @@ def insertarAnimal():
         else:
             flash('Error al cargar la imagen del animal')
             return redirect(url_for('index'))
+            
+@app.route('/insertarEspecie', methods=['POST'])
+def insertarEspecie():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        descripcion = request.form['descripcion']
+
+        nueva_especie = Especie(nombre_especie=nombre, descripcion=descripcion)
+        db.session.add(nueva_especie)
+        db.session.commit()
+        flash('Especie añadido correctamente')
+        return redirect(url_for('index'))
+    else:
+                flash('Fallo al añadir especie')
+                return redirect(url_for('index'))
+    
+@app.route('/insertarHabitat', methods=['POST'])
+def insertarHabitat():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+
+
+        nuevo_habitat = Habitat(nombre_habitat=nombre)
+        db.session.add(nuevo_habitat)
+        db.session.commit()
+        flash('Habitat añadido correctamente')
+        return redirect(url_for('index'))
+    else:
+                flash('Fallo al añadir Habitat')
+                return redirect(url_for('index'))
 
 
 @app.route('/editar', methods=['POST'])
