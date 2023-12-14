@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col md-12">
             <div class="jumbotron p-3">
-                <h2>Lista <b>animales</b>
+                <h2 class="fw-bold">Lista animales
                     <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#modalAniadir">Añadir animales</button>
                 </h2>
 
@@ -58,10 +58,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Editar animal</h4>
-            </div>
+                <h4 class="modal-title fw-bold">Editar animal : {{ animal.nombre_animal }}</h4>
+            </div>            
             <div class="modal-body">
-                <form action="{{url_for('editar')}}" method="POST">
+                <form action="{{url_for('editar', id=animal.id_animal)}}" method="POST" enctype="multipart/form-data">
 
                     <div class="form-group">
                         <label>Nombre:</label>
@@ -80,6 +80,29 @@
                     </div>
 
                     <div class="form-group">
+                        <label>Especie:</label>
+                        <select class="form-control" name="id_especie">
+                            {% for especie in especies %}
+                                <option value="{{ especie.id_especie }}" {% if especie.id_especie == animal.id_especie %}selected{% endif %}>{{ especie.nombre_especie }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Hábitat:</label>
+                        <select class="form-control" name="id_habitat">
+                            {% for habitat in habitats %}
+                                <option value="{{ habitat.id_habitat }}" {% if habitat.id_habitat == animal.id_habitat %}selected{% endif %}>{{ habitat.nombre_habitat }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Imagen:</label>
+                        <input type="file" name="imagen" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
                         <button class="btn btn-primary" type="submit">Editar</button>
                     </div>
 
@@ -92,7 +115,6 @@
         </div>
     </div>
 </div>
-
                     {% endfor %}
                 </table>
             </div>
