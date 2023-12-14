@@ -34,7 +34,7 @@ def insertarAnimal():
                 filename_bytes = imagen.filename.encode('utf-8')
 
                 filename = imagen.filename
-                imagen.save(os.path.join("./img", filename))
+                imagen.save(os.path.join("./static/img", filename))
 
                 animal = Animal(nombre, fecha_nacimiento, edad, filename_bytes, id_especie, id_habitat)
                 db.session.add(animal)
@@ -117,7 +117,7 @@ def imagen_animal(id):
         return send_file(imagen_bytes, mimetype='image/jpeg')
     
     # Si no hay imagen o el animal no existe, puedes enviar una imagen de reemplazo o un error 404
-    return send_file('./img/ZPFFQI~1.PNG', mimetype='image/jpeg')
+    return send_file('./static/img/ZPFFQI~1.PNG', mimetype='image/jpeg')
 
 @app.route('/eliminar/<id>', methods=['GET', 'POST'])
 def eliminar(id):
