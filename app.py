@@ -31,12 +31,9 @@ def insertarAnimal():
             
             extensiones = {'png', 'jpg', 'jpeg'}
             if '.' in imagen.filename and imagen.filename.rsplit('.', 1)[1].lower() in extensiones:
-                filename_bytes = imagen.filename.encode('utf-8')
+                datos_imagen = imagen.read()  # Lee los datos binarios de la imagen
 
-                filename = imagen.filename
-                imagen.save(os.path.join("./static/img", filename))
-
-                animal = Animal(nombre, fecha_nacimiento, edad, filename_bytes, id_especie, id_habitat)
+                animal = Animal(nombre_animal=nombre, fecha_nacimiento=fecha_nacimiento, edad=edad, imagen=datos_imagen, id_especie=id_especie, id_habitat=id_habitat)
                 db.session.add(animal)
                 db.session.commit()
 
@@ -48,6 +45,7 @@ def insertarAnimal():
         else:
             flash('Error al cargar la imagen del animal')
             return redirect(url_for('index'))
+
             
 @app.route('/insertarEspecie', methods=['POST'])
 def insertarEspecie():
