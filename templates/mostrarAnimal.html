@@ -1,0 +1,25 @@
+{% extends 'maestra.html' %}
+
+{% block title %} Información del Animal {% endblock %}
+
+{% block content %}
+    <h2 class="fw-bold">{{ animal.nombre_animal }}</h2>
+    <div class="card" style="width: 36rem;">
+        <img src="{{ url_for('imagen_animal', id=animal.id_animal) }}" class="card-img-top" alt="{{ animal.nombre_animal }}">
+        <div class="card-body">
+            <h5 class="card-title">{{ animal.nombre_animal }}</h5>
+            <div class="card-text">
+                <dt class="col-sm-3">Fecha de Nacimiento</dt>
+                <dd class="col-sm-9">{{ animal.fecha_nacimiento }}</dd>
+
+                <dt class="col-sm-3">Edad</dt>
+                <dd class="col-sm-9">{{ animal.edad }}</dd>
+
+                <!-- Otros campos de información del animal -->
+
+            </div>
+        </div>
+    </div>
+
+    <a href="{{ url_for('index') }}" class="btn btn-primary">Volver a la lista</a>
+{% endblock %}

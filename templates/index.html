@@ -33,23 +33,25 @@
                 <table class="table table-hover table-dark">
 
                     <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Fecha Nacimiento</th>
-                        <th>Edad</th>
-                        <th>Acciones</th>
+                        <th class="text-center">ID</th>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">Fecha Nacimiento</th>
+                        <th class="text-center">Edad</th>
+                        <th class="text-center">Acciones</th>
                     </tr>
 
                     {% for animal in animales %}
 
                     <tr>
-                        <td>{{ animal.id_animal }}</td>
-                        <td>{{ animal.nombre_animal }}</td>
-                        <td>{{ animal.fecha_nacimiento }}</td>
-                        <td>{{ animal.edad }}</td>
-                        <td>
+                        <td class="text-center">{{ animal.id_animal }}</td>
+                        <td class="text-center">{{ animal.nombre_animal }}</td>
+                        <td class="text-center">{{ animal.fecha_nacimiento }}</td>
+                        <td class="text-center">{{ animal.edad }}</td>
+                        <td class="d-flex justify-content-around">
                             <a href="/editar/{{animal.id_animal}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modalEditar{{animal.id_animal}}">Editar</a>
-                            <a href="/eliminar/{{animal.id_animal}}" class="btn btn-danger" onclick="return confirm('¿Estas seguro?')">Eliminar</a>
+                            <a href="/mostrarAnimal/{{animal.id_animal}}" class="btn btn-success btn-xs">Mostrar Información</a>
+                            <a href="/verImagen/{{animal.id_animal}}" class="btn btn-primary" btn-xs>Ver imagen</a>
+                            <a href="/eliminar/{{animal.id_animal}}" class="btn btn-danger btn-xs" onclick="return confirm('¿Estas seguro?')">Eliminar</a>
                         </td>
                     </tr>
 
@@ -63,7 +65,7 @@
             <div class="modal-body">
                 <form action="{{url_for('editar', id=animal.id_animal)}}" method="POST" enctype="multipart/form-data">
 
-                    <div class="form-group">
+                    <div class="form-group"> 
                         <label>Nombre:</label>
                         <input type="hidden" name="id" value="{{animal.id_animal}}">
                         <input type="text" class="form-control" name="nombre" value="{{animal.nombre_animal}}">
@@ -71,7 +73,7 @@
 
                     <div class="form-group">
                         <label>Fecha Nacimiento:</label>
-                        <input type="text" class="form-control" name="fecha_nacimiento" value="{{animal.fecha_nacimiento}}">
+                        <input type="date" class="form-control" name="fecha_nacimiento" value="{{animal.fecha_nacimiento}}">
                     </div>
 
                     <div class="form-group">
@@ -127,7 +129,7 @@
                             <h4 class="modal-title">Añadir animal</h4>
                         </div>
                         <div class="modal-body">
-                            <form action="{{url_for('insertar')}}" method="POST" enctype="multipart/form-data">
+                            <form action="{{url_for('insertarAnimal')}}" method="POST" enctype="multipart/form-data">
 
                                 <div class="form-group">
                                     <label>Nombre:</label>
@@ -136,7 +138,7 @@
 
                                 <div class="form-group">
                                     <label>Fecha Nacimiento:</label>
-                                    <input type="text" class="form-control" name="fecha_nacimiento" required="1">
+                                    <input type="date" class="form-control" name="fecha_nacimiento" required="1">
                                 </div>
 
                                 <div class="form-group">

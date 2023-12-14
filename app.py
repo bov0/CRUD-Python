@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect , url_for, flash
+from flask import Flask, render_template, request, redirect , url_for, flash, send_file
+from io import BytesIO
 import os
 
 app = Flask(__name__)
@@ -16,8 +17,8 @@ def index():
     todosHabitats = Habitat.query.all()
     return render_template('index.html', animales=todosAnimales, especies=todasEspecies, habitats=todosHabitats)
 
-@app.route('/insertar', methods=['POST'])
-def insertar():
+@app.route('/insertarAnimal', methods=['POST'])
+def insertarAnimal():
     if request.method == 'POST':
         nombre = request.form['nombre']
         fecha_nacimiento = request.form['fecha_nacimiento']
@@ -28,12 +29,10 @@ def insertar():
         if 'imagen' in request.files:
             imagen = request.files['imagen']
             
-            extensiones = {'png', 'jpg', 'jpeg', 'gif'}
+            extensiones = {'png', 'jpg', 'jpeg'}
             if '.' in imagen.filename and imagen.filename.rsplit('.', 1)[1].lower() in extensiones:
-                # Convierte el nombre del archivo a bytes
                 filename_bytes = imagen.filename.encode('utf-8')
 
-                # Guarda la imagen en el sistema de archivos
                 filename = imagen.filename
                 imagen.save(os.path.join("./img", filename))
 
@@ -69,6 +68,26 @@ def editar():
         db.session.commit()
         flash('Animal actualizado correctamente')
         return redirect(url_for('index'))
+    
+
+@app.route('/mostrarAnimal/<id>')
+def mostrarAnimal(id):
+    animal = Animal.query.get(id)
+    return render_template('mostrarAnimal.html', animal=animal)
+
+@app.route('/verImagen/<id>')
+def imagen_animal(id):
+    animal = Animal.query.get(id)
+    
+    if animal and animal.imagen:
+        # Convierte el campo BLOB a un objeto BytesIO
+        imagen_bytes = BytesIO(animal.imagen)
+        
+        # Envia la imagen al navegador con el tipo MIME adecuado
+        return send_file(imagen_bytes, mimetype='image/jpeg')
+    
+    # Si no hay imagen o el animal no existe, puedes enviar una imagen de reemplazo o un error 404
+    return send_file('./img/ZPFFQI~1.PNG', mimetype='image/jpeg')
 
 @app.route('/eliminar/<id>', methods=['GET', 'POST'])
 def eliminar(id):
