@@ -8,7 +8,9 @@
         <div class="col md-12">
             <div class="jumbotron p-3">
                 <h2 class="fw-bold">Lista animales
-                    <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#modalAniadir">Añadir animales</button>
+                    <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#modalAniadirAnimal" style="margin: 1%;">Añadir animales</button>
+                    <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#modalAniadirEspecie" style="margin: 1%;">Añadir especie</button>
+                    <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#modalAniadirHabitat" style="margin: 1%;">Añadir habitat</button>
                 </h2>
 
                 {% with messages = get_flashed_messages() %}
@@ -171,6 +173,57 @@
 
                                 <div class="form-group">
                                     <button class="btn btn-primary" type="submit">Añadir animal</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div id="modalAniadirEspecie" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Añadir especie</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{url_for('insertarEspecie')}}" method="POST" enctype="multipart/form-data">
+
+                                <div class="form-group">
+                                    <label>Nombre:</label>
+                                    <input type="text" class="form-control" name="nombre" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Descripcion:</label>
+                                    <input type="txet" name="descripcion" class="form-control" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Añadir especie</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="modalAniadirHabitat" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Añadir habitat</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{url_for('insertarHabitat')}}" method="POST" enctype="multipart/form-data">
+
+                                <div class="form-group">
+                                    <label>Nombre:</label>
+                                    <input type="text" class="form-control" name="nombre" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Añadir especie</button>
                                 </div>
 
                             </form>
