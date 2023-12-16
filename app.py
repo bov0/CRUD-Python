@@ -17,6 +17,20 @@ def index():
     todosHabitats = Habitat.query.all()
     return render_template('index.html', animales=todosAnimales, especies=todasEspecies, habitats=todosHabitats)
 
+@app.route('/habitats')
+def habitats():
+    todosAnimales = Animal.query.all()
+    todasEspecies = Especie.query.all()
+    todosHabitats = Habitat.query.all()
+    return render_template('habitats.html', animales=todosAnimales, especies=todasEspecies, habitats=todosHabitats)
+
+@app.route('/especies')
+def especies():
+    todosAnimales = Animal.query.all()
+    todasEspecies = Especie.query.all()
+    todosHabitats = Habitat.query.all()
+    return render_template('especies.html', animales=todosAnimales, especies=todasEspecies, habitats=todosHabitats)
+
 @app.route('/insertarAnimal', methods=['POST'])
 def insertarAnimal():
     if request.method == 'POST':
@@ -103,21 +117,28 @@ def editar():
 @app.route('/mostrarAnimal/<id>')
 def mostrarAnimal(id):
     animal = Animal.query.get(id)
-    return render_template('mostrarAnimal.html', animal=animal)
+    especie = animal.especie
+    habitat = animal.habitat
+    return render_template('mostrarAnimal.html', animal=animal, especie=especie, habitat=habitat)
 
 @app.route('/verImagen/<id>')
 def imagen_animal(id):
     animal = Animal.query.get(id)
-    
+
     if animal and animal.imagen:
-        # Convierte el campo BLOB a un objeto BytesIO
-        imagen_bytes = BytesIO(animal.imagen)
-        
-        # Envia la imagen al navegador con el tipo MIME adecuado
-        return send_file(imagen_bytes, mimetype='image/jpeg')
-    
-    # Si no hay imagen o el animal no existe, puedes enviar una imagen de reemplazo o un error 404
-    return send_file('./static/img/ZPFFQI~1.PNG', mimetype='image/jpeg')
+        try:
+            # Convierte el campo BLOB a un objeto BytesIO
+            imagen_bytes = BytesIO(animal.imagen)
+
+            # Envia la imagen al navegador con el tipo MIME adecuado
+            return send_file(imagen_bytes, mimetype='image/jpeg')
+        except Exception as e:
+            # Manejar cualquier error que pueda ocurrir al convertir o enviar la imagen
+            print(f"Error al cargar la imagen: {e}")
+            return send_file('./static/img/Cool wallpaper.jpg', mimetype='image/jpeg')
+    else:
+        # Si no hay imagen o el animal no existe, enviar una imagen de reemplazo o error 404
+        return send_file('./static/img/Cool wallpaper.jpg', mimetype='image/jpeg')
 
 @app.route('/eliminar/<id>', methods=['GET', 'POST'])
 def eliminar(id):

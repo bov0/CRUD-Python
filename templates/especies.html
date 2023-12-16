@@ -1,0 +1,19 @@
+{% extends 'maestra.html' %}
+
+{% block title %} Especies {% endblock %}
+
+{% block content %}
+
+<div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center;">
+
+{% for especie in especies %}
+
+<div class="card text-center" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">{{ especie.nombre_especie }}</h5>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}
