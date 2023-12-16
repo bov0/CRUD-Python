@@ -24,9 +24,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
+                    {% for habitat in habitats %}
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#">Zoo Madrid</a>
+                        <a class="nav-link" aria-current="page" href="/verHabitat/{{habitat.id_habitat}}">{{ habitat.nombre_habitat }}</a>
                     </li>
+                    {% endfor %}
                     <li class="nav-item">
                         <a class="nav-link" href="/">Animales</a>
                     </li>

@@ -48,7 +48,7 @@ class EspecieSchema(ma.Schema):
 
 class HabitatSchema(ma.Schema):
     class Meta:
-        fields = ('id_habitat', 'nombre_habitat')
+        fields = ('id_habitat', 'nombre_habitat' ,'imagen_habitat')
 
 class AnimalSchema(ma.Schema):
     class Meta:
