@@ -61,21 +61,33 @@ def insertarEspecie():
     else:
                 flash('Fallo al añadir especie')
                 return redirect(url_for('index'))
-    
+
 @app.route('/insertarHabitat', methods=['POST'])
 def insertarHabitat():
     if request.method == 'POST':
         nombre = request.form['nombre']
+        
+        if 'imagen' in request.files:
+            imagen = request.files['imagen']
+            
+            extensiones = {'png', 'jpg', 'jpeg'}
+            if '.' in imagen.filename and imagen.filename.rsplit('.', 1)[1].lower() in extensiones:
+                filename = imagen.filename
+                ruta_imagen = os.path.join("./static/img", filename)
+                imagen.save(ruta_imagen)
 
+                nuevo_habitat = Habitat(nombre_habitat=nombre, imagen_habitat=filename)
+                db.session.add(nuevo_habitat)
+                db.session.commit()
+                
+                flash('Habitat añadido correctamente')
+            else:
+                flash('Extensión de archivo no permitida')
+        else:
+            flash('Error al cargar la imagen del hábitat')
 
-        nuevo_habitat = Habitat(nombre_habitat=nombre)
-        db.session.add(nuevo_habitat)
-        db.session.commit()
-        flash('Habitat añadido correctamente')
-        return redirect(url_for('index'))
-    else:
-                flash('Fallo al añadir Habitat')
-                return redirect(url_for('index'))
+    return redirect(url_for('index'))
+
 
 
 @app.route('/editar', methods=['POST'])
@@ -115,6 +127,23 @@ def imagen_animal(id):
         return send_file(imagen_bytes, mimetype='image/jpeg')
     
     # Si no hay imagen o el animal no existe, puedes enviar una imagen de reemplazo o un error 404
+    return send_file('./static/img/ZPFFQI~1.PNG', mimetype='image/jpeg')
+
+
+@app.route('/verHabitat/<id>')
+def imagen_habitat(id):
+    habitat = Habitat.query.get(id)
+    
+    if habitat and habitat.imagen_habitat:  
+        ruta_imagen = habitat.imagen_habitat
+        
+        # Obtener la ruta absoluta del archivo
+        ruta_absoluta = os.path.join('./static/img/', ruta_imagen.lstrip('/'))
+        
+        if os.path.exists(ruta_absoluta):
+            return send_file(ruta_absoluta, mimetype='image/jpeg')
+    
+    # Si no hay imagen o el hábitat no existe, enviar una imagen de reemplazo o un error 404
     return send_file('./static/img/ZPFFQI~1.PNG', mimetype='image/jpeg')
 
 @app.route('/eliminar/<id>', methods=['GET', 'POST'])

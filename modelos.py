@@ -18,6 +18,7 @@ class Habitat(db.Model):
 
     id_habitat = db.Column(db.Integer, primary_key=True)
     nombre_habitat = db.Column(db.String(255), nullable=False, unique=True)
+    imagen_habitat = db.Column(db.String(255), nullable=False, unique=True)
 
 class Animal(db.Model):
     __tablename__ = 'animales'
