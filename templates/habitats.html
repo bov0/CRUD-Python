@@ -6,13 +6,15 @@
 <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center;">
 
 {% for habitat in habitats %}
-
-<div class="card text-center" style="width: 18rem;">
-    <div class="card-body">
-        <h5 class="card-title">{{ habitat.nombre_habitat }}</h5>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-    </div>
-</div>
+    <a href="{{ url_for('animalesHabitat', habitat_id=habitat.id_habitat) }}" style="text-decoration: none; color: inherit;">
+        <div class="card" style="width: 18rem;">
+            <img src="{{ url_for('imagen_habitat', id=habitat.id_habitat) }}" class="card-img-top" alt="{{ habitat.nombre_habitat }}">
+            <div class="card-body">
+                <p class="card-text">{{ habitat.nombre_habitat }}</p>
+            </div>
+        </div>
+    </a>
 {% endfor %}
+
 </div>
 {% endblock %}

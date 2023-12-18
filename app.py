@@ -169,6 +169,15 @@ def imagen_habitat(id):
     # Si no hay imagen o el hábitat no existe, enviar una imagen de reemplazo o un error 404
     return send_file('./static/img/ZPFFQI~1.PNG', mimetype='image/jpeg')
 
+@app.route('/animalesHabitat/<int:habitat_id>')
+def animalesHabitat(habitat_id):
+    # Aquí obtienes los animales que pertenecen al hábitat con el ID proporcionado
+    # Supongamos que tienes una relación en tu modelo que conecta hábitats con animales
+    habitat = Habitat.query.get(habitat_id)
+    animales_en_habitat = habitat.animales  # Ajusta esto según tu modelo
+
+    return render_template('animalesHabitat.html', habitat=habitat, animales=animales_en_habitat)
+
 
 @app.route('/eliminar/<id>', methods=['GET', 'POST'])
 def eliminar(id):
