@@ -3,5 +3,16 @@
 {% block title %} Habitats {% endblock %}
 
 {% block content %}
-    
+<div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center;">
+
+{% for habitat in habitats %}
+
+<div class="card text-center" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">{{ habitat.nombre_habitat }}</h5>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+</div>
+{% endfor %}
+</div>
 {% endblock %}
