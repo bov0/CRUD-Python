@@ -1,0 +1,26 @@
+{% extends 'maestra.html' %}
+
+{% block title %} Animales de la especie: {{ especie.nombre_especie }} {% endblock %}
+
+{% block content %}
+    <h2 class="fw-bold">Especie: {{ especie.nombre_especie }}</h2>
+
+    <div class="row">
+        {% for animal in animales %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ url_for('imagen_animal', id=animal.id_animal) }}" class="card-img-top" alt="{{ animal.nombre_animal }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ animal.nombre_animal }}</h5>
+                        <p class="card-text">
+                            <strong>Fecha de Nacimiento:</strong> {{ animal.fecha_nacimiento }}<br>
+                            <strong>Edad:</strong> {{ animal.edad }} años
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">Volver a la lista de animales</a>
+{% endblock %}

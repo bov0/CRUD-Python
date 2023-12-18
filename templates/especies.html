@@ -11,7 +11,8 @@
 <div class="card text-center" style="width: 18rem;">
     <div class="card-body">
         <h5 class="card-title">{{ especie.nombre_especie }}</h5>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+        <p>{{ especie.descripcion }}</p>
+        <a href="{{ url_for('animalesPorEspecie', especie_id=especie.id_especie) }}" class="btn btn-primary">Mostrar animales de esta especie</a>
     </div>
 </div>
 
