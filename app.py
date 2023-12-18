@@ -32,8 +32,11 @@ def insertarAnimal():
             extensiones = {'png', 'jpg', 'jpeg'}
             if '.' in imagen.filename and imagen.filename.rsplit('.', 1)[1].lower() in extensiones:
                 datos_imagen = imagen.read()  # Lee los datos binarios de la imagen
+                filename = imagen.filename
+                ruta_imagen = os.path.join("./static/img", filename)
+                imagen.save(ruta_imagen)
 
-                animal = Animal(nombre_animal=nombre, fecha_nacimiento=fecha_nacimiento, edad=edad, imagen=datos_imagen, id_especie=id_especie, id_habitat=id_habitat)
+                animal = Animal(nombre_animal=nombre, fecha_nacimiento=fecha_nacimiento, edad=edad, id_especie=id_especie, id_habitat=id_habitat, nombre_Imagen=ruta_imagen, imagen=datos_imagen)
                 db.session.add(animal)
                 db.session.commit()
 
@@ -72,11 +75,12 @@ def insertarHabitat():
             
             extensiones = {'png', 'jpg', 'jpeg'}
             if '.' in imagen.filename and imagen.filename.rsplit('.', 1)[1].lower() in extensiones:
+                datos_imagen = imagen.read()  # Lee los datos binarios de la imagen
                 filename = imagen.filename
                 ruta_imagen = os.path.join("./static/img", filename)
                 imagen.save(ruta_imagen)
 
-                nuevo_habitat = Habitat(nombre_habitat=nombre, imagen_habitat=filename)
+                nuevo_habitat = Habitat(nombre_habitat=nombre, nombre_imagen=ruta_imagen, imagen_habitat=datos_imagen)
                 db.session.add(nuevo_habitat)
                 db.session.commit()
                 
@@ -134,17 +138,16 @@ def imagen_animal(id):
 def imagen_habitat(id):
     habitat = Habitat.query.get(id)
     
-    if habitat and habitat.imagen_habitat:  
-        ruta_imagen = habitat.imagen_habitat
+    if habitat and habitat.nombre_imagen:  
+        imagen_bytes = BytesIO(habitat.imagen_habitat)
         
         # Obtener la ruta absoluta del archivo
-        ruta_absoluta = os.path.join('./static/img/', ruta_imagen.lstrip('/'))
+        return send_file(imagen_bytes, mimetype='image/jpeg')
         
-        if os.path.exists(ruta_absoluta):
-            return send_file(ruta_absoluta, mimetype='image/jpeg')
     
     # Si no hay imagen o el hábitat no existe, enviar una imagen de reemplazo o un error 404
     return send_file('./static/img/ZPFFQI~1.PNG', mimetype='image/jpeg')
+
 
 @app.route('/eliminar/<id>', methods=['GET', 'POST'])
 def eliminar(id):
