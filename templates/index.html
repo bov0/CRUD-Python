@@ -193,6 +193,7 @@
                     </div>
                 </div>
             </div>
+            <!--Modal para poder añadir especies-->
             <div id="modalAniadirEspecie" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -200,16 +201,21 @@
                             <h4 class="modal-title">Añadir especie</h4>
                         </div>
                         <div class="modal-body">
-                            <form action="{{url_for('insertarEspecie')}}" method="POST" enctype="multipart/form-data">
+                            <form id="especieForm" action="{{url_for('insertarEspecie')}}" method="POST"
+                                enctype="multipart/form-data">
 
                                 <div class="form-group">
-                                    <label>Nombre:</label>
-                                    <input type="text" class="form-control" name="nombre" required="1">
+                                    <label for="nombreEspecieInput">Nombre:</label>
+                                    <input type="text" class="form-control" name="nombre" id="nombreEspecieInput"
+                                        required="1">
+                                    <div id="nombreError" class="text-danger"></div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Descripcion:</label>
-                                    <input type="txet" name="descripcion" class="form-control" required="1">
+                                    <label for="descripcionEspecieInput">Descripción:</label>
+                                    <input type="text" class="form-control" name="descripcion"
+                                        id="descripcionEspecieInput" required="1">
+                                    <div id="descripcionError" class="text-danger"></div>
                                 </div>
 
                                 <div class="form-group">
@@ -217,10 +223,12 @@
                                 </div>
 
                             </form>
+
                         </div>
                     </div>
                 </div>
             </div>
+            <!--Modal para poder añadir habitats-->
             <div id="modalAniadirHabitat" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -239,7 +247,7 @@
                                     <label>Imagen:</label>
                                     <input type="file" name="imagen" accept="image/*" required="1">
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <button class="btn btn-primary" type="submit">Añadir habitat</button>
                                 </div>
