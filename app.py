@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect , url_for, flash, se
 from io import BytesIO
 import os
 from werkzeug.utils import secure_filename
-from forms import EspecieForm, HabitatForm
+from forms import AnimalForm, EspecieForm, HabitatForm
 
 app = Flask(__name__)
 
@@ -35,20 +35,21 @@ def especies():
 
 @app.route('/insertarAnimal', methods=['POST'])
 def insertarAnimal():
-    if request.method == 'POST':
-        nombre = request.form['nombre']
-        fecha_nacimiento = request.form['fecha_nacimiento']
-        edad = request.form['edad']
-        id_especie = request.form['id_especie']
-        id_habitat = request.form['id_habitat']
+    form = AnimalForm()
 
-        if 'imagen' in request.files:
-            imagen = request.files['imagen']
-            
+    if form.validate_on_submit():
+        nombre = form.nombre.data
+        fecha_nacimiento = form.fecha_nacimiento.data
+        edad = form.edad.data
+        id_especie = form.id_especie.data
+        id_habitat = form.id_habitat.data
+
+        imagen = form.imagen.data
+        if imagen:
+            filename = imagen.filename
             extensiones = {'png', 'jpg', 'jpeg'}
-            if '.' in imagen.filename and imagen.filename.rsplit('.', 1)[1].lower() in extensiones:
-                datos_imagen = imagen.read()  # Lee los datos binarios de la imagen
-                filename = imagen.filename
+            if '.' in filename and filename.rsplit('.', 1)[1].lower() in extensiones:
+                datos_imagen = imagen.read()
                 ruta_imagen = os.path.join("./static/img", filename)
                 imagen.save(ruta_imagen)
 
@@ -60,10 +61,15 @@ def insertarAnimal():
                 return redirect(url_for('index'))
             else:
                 flash('Extensión de archivo no permitida')
-                return redirect(url_for('index'))
         else:
             flash('Error al cargar la imagen del animal')
-            return redirect(url_for('index'))
+    else:
+        for field, errors in form.errors.items():
+            # Ignora el error CSRF Token
+            if field != 'csrf_token':
+                for error in errors:
+                    flash(f'Error en el campo {getattr(form, field).label.text}: {error}')
+    return redirect(url_for('index'))
 
             
 @app.route('/insertarEspecie', methods=['POST'])
