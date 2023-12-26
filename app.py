@@ -198,7 +198,12 @@ def animalesHabitat(habitat_id):
 
     return render_template('animalesHabitat.html', habitat=habitat, animales=animales_en_habitat)
 
+@app.route('/animalesPorEspecie/<int:especie_id>')
+def animalesPorEspecie(especie_id):
+    especie = Especie.query.get(especie_id)
+    animales_por_especie = especie.animales  
 
+    return render_template('animalesPorEspecie.html', especie=especie, animales=animales_por_especie)
 @app.route('/eliminar/<id>', methods=['GET', 'POST'])
 def eliminar(id):
     animal = Animal.query.get(id)
