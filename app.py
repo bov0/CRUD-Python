@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect , url_for, flash, se
 from io import BytesIO
 import os
 from werkzeug.utils import secure_filename
-from forms import AnimalForm, EspecieForm, HabitatForm
+from forms import  AnimalForm, EspecieForm, HabitatForm
 
 app = Flask(__name__)
 
@@ -44,16 +44,18 @@ def insertarAnimal():
         id_especie = form.id_especie.data
         id_habitat = form.id_habitat.data
 
-        imagen = form.imagen.data
-        if imagen:
-            filename = imagen.filename
+        if 'imagen' in request.files:
+            imagen = form.imagen.data  # Accede a los datos del archivo
+
             extensiones = {'png', 'jpg', 'jpeg'}
-            if '.' in filename and filename.rsplit('.', 1)[1].lower() in extensiones:
+            if '.' in imagen.filename and imagen.filename.rsplit('.', 1)[1].lower() in extensiones:
                 datos_imagen = imagen.read()
+                filename = imagen.filename
                 ruta_imagen = os.path.join("./static/img", filename)
                 imagen.save(ruta_imagen)
 
                 animal = Animal(nombre_animal=nombre, fecha_nacimiento=fecha_nacimiento, edad=edad, id_especie=id_especie, id_habitat=id_habitat, nombre_Imagen=ruta_imagen, imagen=datos_imagen)
+
                 db.session.add(animal)
                 db.session.commit()
 
@@ -64,12 +66,13 @@ def insertarAnimal():
         else:
             flash('Error al cargar la imagen del animal')
     else:
+        flash('Error en el formulario')
         for field, errors in form.errors.items():
-            # Ignora el error CSRF Token
-            if field != 'csrf_token':
-                for error in errors:
-                    flash(f'Error en el campo {getattr(form, field).label.text}: {error}')
+            for error in errors:
+                flash(f'Error en el campo {getattr(form, field).label.text}: {error}')
+
     return redirect(url_for('index'))
+
 
             
 @app.route('/insertarEspecie', methods=['POST'])
@@ -87,12 +90,10 @@ def insertarEspecie():
         flash('Especie añadida correctamente', 'success')
         return redirect(url_for('index'))
     else:
-        for field, errors in form.errors.items():
-            # Ignora el error CSRF Token
-            if field != 'csrf_token':
-                for error in errors:
-                    flash(f'Error en el campo {getattr(form, field).label.text}: {error}')
-
+         flash('Error')
+         for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'Error en el campo {getattr(form, field).label.text}: {error}')
     return redirect(url_for('index'))
 
 @app.route('/insertarHabitat', methods=['POST'])
@@ -119,13 +120,12 @@ def insertarHabitat():
 
         flash('Habitat añadido correctamente', 'success')
     else:
-        for field, errors in form.errors.items():
-            # Ignora el error CSRF Token
-            if field != 'csrf_token':
-                for error in errors:
-                    flash(f'Error en el campo {getattr(form, field).label.text}: {error}')
-
+       flash('Error')
+       for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'Error en el campo {getattr(form, field).label.text}: {error}')
     return redirect(url_for('index'))
+
 
 
 
@@ -213,4 +213,5 @@ def eliminar(id):
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
+    app.config['WTF_CSRF_ENABLED'] = False
     app.run(debug=True)
