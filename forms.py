@@ -14,12 +14,13 @@ class AnimalForm(FlaskForm):
 
     id_habitat = SelectField('Hábitat')
 
-    def __init__(self, *args, **kwargs):
-        super(AnimalForm, self).__init__(*args, **kwargs)
-        self.id_especie.choices = [(str(especie.id_especie), especie.nombre_especie) for especie in Especie.query.all()]
-        self.id_habitat.choices = [(str(habitat.id_habitat), habitat.nombre_habitat) for habitat in Habitat.query.all()]
+    def __init__(form, *args, **kwargs):
+        super(AnimalForm, form).__init__(*args, **kwargs)
+        form.id_especie.choices = [(str(especie.id_especie), especie.nombre_especie) for especie in Especie.query.all()]
+        form.id_habitat.choices = [(str(habitat.id_habitat), habitat.nombre_habitat) for habitat in Habitat.query.all()]
     imagen = FileField('Imagen', validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Solo se permiten archivos con las extensiones jpg, jpeg o png.')])
     submit = SubmitField('Añadir animal')
+    
 class EspecieForm(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired(), Regexp('^[a-zA-Z\\s]+$', message='El nombre no puede contener números.')])
     descripcion = TextAreaField('Descripción', validators=[DataRequired()])
