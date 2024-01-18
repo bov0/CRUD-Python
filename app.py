@@ -48,6 +48,7 @@ def insertarAnimal():
                 datos_imagen = imagen.read()  # Lee los datos binarios de la imagen
                 filename = imagen.filename
                 ruta_imagen = os.path.join("./static/img", filename)
+                imagen.save(ruta_imagen)
                 
 
                 animal = Animal(nombre_animal=nombre, fecha_nacimiento=fecha_nacimiento, edad=edad, id_especie=id_especie, id_habitat=id_habitat, nombre_Imagen=ruta_imagen, imagen=datos_imagen)
@@ -92,6 +93,7 @@ def insertarHabitat():
                 datos_imagen = imagen.read()  # Lee los datos binarios de la imagen
                 filename = imagen.filename
                 ruta_imagen = os.path.join("./static/img", filename)
+                imagen.save(ruta_imagen)
                 
 
                 nuevo_habitat = Habitat(nombre_habitat=nombre, nombre_imagen=ruta_imagen, imagen_habitat=datos_imagen)
