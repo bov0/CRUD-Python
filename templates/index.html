@@ -71,25 +71,25 @@
                                     <h4 class="modal-title fw-bold">Editar animal : {{ animal.nombre_animal }}</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="{{url_for('editar', id=animal.id_animal)}}" method="POST"
-                                        enctype="multipart/form-data">
+                                    <form id="formEditAnimal"  action="{{url_for('editar', id=animal.id_animal)}}" method="POST" 
+                                        enctype="multipart/form-data"  >
 
                                         <div class="form-group">
                                             <label>Nombre:</label>
                                             <input type="hidden" name="id" value="{{animal.id_animal}}">
                                             <input type="text" class="form-control" name="nombre"
-                                                value="{{animal.nombre_animal}}">
+                                                value="{{animal.nombre_animal}}" id="nombreEdit">
                                         </div>
 
                                         <div class="form-group">
                                             <label>Fecha Nacimiento:</label>
                                             <input type="date" class="form-control" name="fecha_nacimiento"
-                                                value="{{animal.fecha_nacimiento}}">
+                                                value="{{animal.fecha_nacimiento}}" id="fechaEdit">
                                         </div>
 
                                         <div class="form-group">
                                             <label>Edad:</label>
-                                            <input type="text" class="form-control" name="edad" value="{{animal.edad}}">
+                                            <input type="text" class="form-control" name="edad" value="{{animal.edad}}" id="edadEdit">
                                         </div>
 
                                         <div class="form-group">
@@ -116,11 +116,11 @@
 
                                         <div class="form-group">
                                             <label>Imagen:</label>
-                                            <input type="file" name="imagen" accept="image/*">
+                                            <input type="file" name="imagen" accept="image/*" id="imagenEdit">
                                         </div>
 
                                         <div class="form-group">
-                                            <button class="btn btn-primary" type="submit">Editar</button>
+                                            <button class="btn btn-primary" type="submit" id="submitEditAnimal">Editar</button>
                                         </div>
 
                                     </form>
@@ -144,21 +144,21 @@
                             <h4 class="modal-title">Añadir animal</h4>
                         </div>
                         <div class="modal-body">
-                            <form action="{{url_for('insertarAnimal')}}" method="POST" enctype="multipart/form-data">
+                            <form id="formAnimal" action="{{url_for('insertarAnimal')}}" method="POST" enctype="multipart/form-data">
 
                                 <div class="form-group">
                                     <label>Nombre:</label>
-                                    <input type="text" class="form-control" name="nombre" required="1">
+                                    <input type="text" class="form-control" name="nombre" required="1" id="nombre_animal">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Fecha Nacimiento:</label>
-                                    <input type="date" class="form-control" name="fecha_nacimiento" required="1">
+                                    <input type="date" class="form-control" name="fecha_nacimiento" required="1" id="fecha_animal">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Edad:</label>
-                                    <input type="text" class="form-control" name="edad" required="1">
+                                    <input type="text" class="form-control" name="edad" required="1" id="edad">
                                 </div>
 
                                 <div class="form-group">
@@ -181,11 +181,11 @@
 
                                 <div class="form-group">
                                     <label>Imagen:</label>
-                                    <input type="file" name="imagen" accept="image/*" required="1">
+                                    <input type="file" name="imagen" accept="image/*" required="1" id="imagen_animal">
                                 </div>
 
                                 <div class="form-group">
-                                    <button class="btn btn-primary" type="submit">Añadir animal</button>
+                                    <button class="btn btn-primary" type="submit" id="submitAnimal">Añadir animal</button>
                                 </div>
 
                             </form>
@@ -193,7 +193,6 @@
                     </div>
                 </div>
             </div>
-            <!--Modal para poder añadir especies-->
             <div id="modalAniadirEspecie" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -201,34 +200,25 @@
                             <h4 class="modal-title">Añadir especie</h4>
                         </div>
                         <div class="modal-body">
-                            <form id="especieForm" action="{{url_for('insertarEspecie')}}" method="POST"
-                                enctype="multipart/form-data"> 
-
+                            <form id="formEspecie" action="{{url_for('insertarEspecie')}}" method="POST" enctype="multipart/form-data" >
                                 <div class="form-group">
-                                    <label for="nombreEspecieInput">Nombre:</label>
-                                    <input type="text" class="form-control" name="nombre" id="nombreEspecieInput"
-                                        required="1">
-                                    <div id="nombreError" class="text-danger"></div>
+                                    <label>Nombre:</label>
+                                    <input type="text" class="form-control" name="nombre" id="nombre_especie" required="1">
                                 </div>
-
+                        
                                 <div class="form-group">
-                                    <label for="descripcionEspecieInput">Descripción:</label>
-                                    <input type="text" class="form-control" name="descripcion"
-                                        id="descripcionEspecieInput" required="1">
-                                    <div id="descripcionError" class="text-danger"></div>
+                                    <label>Descripción:</label>
+                                    <input type="text" name="descripcion" class="form-control" id="descripcion_especie" required="1">
                                 </div>
-
+                        
                                 <div class="form-group">
-                                    <button class="btn btn-primary" type="submit">Añadir especie</button>
+                                    <button class="btn btn-primary" type="submit" id="submitEspecie">Añadir especie</button>
                                 </div>
-
                             </form>
-
                         </div>
                     </div>
                 </div>
             </div>
-            <!--Modal para poder añadir habitats-->
             <div id="modalAniadirHabitat" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -236,20 +226,20 @@
                             <h4 class="modal-title">Añadir habitat</h4>
                         </div>
                         <div class="modal-body">
-                            <form action="{{url_for('insertarHabitat')}}" method="POST" enctype="multipart/form-data">
+                            <form id="formHabitat" action="{{url_for('insertarHabitat')}}" method="POST" enctype="multipart/form-data" id="nombre_habitat">
 
                                 <div class="form-group">
                                     <label>Nombre:</label>
-                                    <input type="text" class="form-control" name="nombre" required="1">
+                                    <input type="text" class="form-control" name="nombre" required="1" id="nombre_habitat">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Imagen:</label>
-                                    <input type="file" name="imagen" accept="image/*" required="1">
+                                    <input type="file" name="imagen" accept="image/*" required="1" id="imagen_habitat">
                                 </div>
-
+                                
                                 <div class="form-group">
-                                    <button class="btn btn-primary" type="submit">Añadir habitat</button>
+                                    <button class="btn btn-primary" type="submit" id="submitHabitat">Añadir habitat</button>
                                 </div>
 
                             </form>
@@ -260,4 +250,144 @@
         </div>
     </div>
 </div>
+<script>
+    const botonEspecie = document.getElementById("submitEspecie");
+    const botonHabitat = document.getElementById("submitHabitat");
+    const botonAnimal = document.getElementById("submitAnimal");
+    const botonEditAnimal = document.getElementById("submitEditAnimal");
+
+    botonEditAnimal.addEventListener("click", function(event) {
+        event.preventDefault();
+        validarEditAnimal();
+    });
+
+    botonEspecie.addEventListener("click", validarEspecie);
+    botonHabitat.addEventListener("click", validarHabitat);
+    botonAnimal.addEventListener("click", validarAnimal);
+    
+
+    function validarNombreSinNumeros(nombre) {
+    return !/.*\d.*/.test(nombre);
+}
+
+
+function validarCampoNoVacio(campo, mensaje) {
+    if (campo === "") {
+        alert(mensaje);
+        return false;
+    }
+    return true;
+}
+
+
+function validarNumeroMayorQueCero(numero, mensaje) {
+    if (isNaN(numero) || numero <= 0) {
+        alert(mensaje);
+        return false;
+    }
+    return true;
+}
+
+
+function validarExtensionImagen(imagen, mensaje) {
+    var extensions = /(\.jpg|\.jpeg|\.png)$/i;
+    if (!extensions.exec(imagen)) {
+        alert(mensaje);
+        return false;
+    }
+    return true;
+}
+
+function validarEspecie(event) {
+    event.preventDefault();
+
+    var nombreEspecie = document.getElementById("nombre_especie").value;
+    var descripcionEspecie = document.getElementById("descripcion_especie").value;
+
+    if (!validarNombreSinNumeros(nombreEspecie)) {
+        alert("El nombre de la especie no puede contener números.");
+        return false;
+    }
+
+    if (!validarCampoNoVacio(nombreEspecie, "Por favor, ingresa el nombre de la especie.") ||
+        !validarCampoNoVacio(descripcionEspecie, "Por favor, ingresa la descripción de la especie.")) {
+        return false;
+    }
+
+    document.getElementById("formEspecie").submit();
+}
+
+
+function validarHabitat(event) {
+    event.preventDefault();
+
+    var nombreHabitat = document.getElementById("nombre_habitat").value;
+    var imagenHabitat = document.getElementById("imagen_habitat").value;
+
+    if (!validarNombreSinNumeros(nombreHabitat)) {
+        alert("El nombre del hábitat no puede contener números.");
+        return false;
+    }
+
+    if (!validarCampoNoVacio(nombreHabitat, "Por favor, ingresa el nombre del hábitat.") ||
+        !validarExtensionImagen(imagenHabitat, "Por favor, selecciona un archivo de imagen con extensiones jpg, jpeg o png.")) {
+        return false;
+    }
+
+    document.getElementById("formHabitat").submit();
+}
+
+
+function validarAnimal(event) {    
+    event.preventDefault();
+
+    var nombreAnimal = document.getElementById("nombre_animal").value;
+    var fechaAnimal = document.getElementById("fecha_animal").value;
+    var edad = document.getElementById("edad").value;
+    var imagenAnimal = document.getElementById("imagen_animal").value;
+
+    if (!validarNombreSinNumeros(nombreAnimal)) {
+        alert("El nombre del animal no puede contener números.");
+        return false;
+    }
+
+    if (!validarCampoNoVacio(nombreAnimal, "Por favor, ingresa el nombre del animal.") ||
+        !validarCampoNoVacio(fechaAnimal, "Por favor, ingresa la fecha de nacimiento del animal.") ||
+        !validarCampoNoVacio(edad, "Por favor, ingresa la edad.") ||
+        !validarNumeroMayorQueCero(edad, "Por favor, ingresa un número mayor que 0 en el campo correspondiente.") ||
+        !validarExtensionImagen(imagenAnimal, "Por favor, selecciona un archivo de imagen con extensiones jpg, jpeg o png.")) {
+        return false;
+    }
+
+    document.getElementById("formAnimal").submit();
+}
+
+
+function validarEditAnimal(event) {
+    event.preventDefault();
+    
+
+    var nombreEditAnimal = document.getElementById("nombreEdit").value;
+    var fechaEditAnimal = document.getElementById("fechaEdit").value;
+    var edadEdit = document.getElementById("edadEdit").value;
+    var imagenEditAnimal = document.getElementById("imagenEdit").value;
+
+    if (!validarNombreSinNumeros(nombreEditAnimal)) {
+        alert("El nombre del animal no puede contener números.");
+        return false;
+    }
+
+    if (!validarCampoNoVacio(nombreEditAnimal, "Por favor, ingresa el nombre del animal.") ||
+        !validarCampoNoVacio(fechaEditAnimal, "Por favor, ingresa la fecha de nacimiento del animal.") ||
+        !validarCampoNoVacio(edadEdit, "Por favor, ingresa la edad.") ||
+        !validarNumeroMayorQueCero(edadEdit, "Por favor, ingresa un número mayor que 0 en el campo correspondiente.") ||
+        !validarExtensionImagen(imagenEditAnimal, "Por favor, selecciona un archivo de imagen con extensiones jpg, jpeg o png.")) {
+        return false;
+    }
+
+    document.getElementById("formEditAnimal").submit();
+
+}
+</script>
+
 {% endblock %}

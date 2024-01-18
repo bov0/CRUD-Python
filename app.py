@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, redirect , url_for, flash, send_file
 from io import BytesIO
 import os
-from werkzeug.utils import secure_filename
-from forms import  AnimalForm, EspecieForm, HabitatForm
 
 app = Flask(__name__)
 
@@ -35,27 +33,24 @@ def especies():
 
 @app.route('/insertarAnimal', methods=['POST'])
 def insertarAnimal():
-    form = AnimalForm()
-
-    if form.validate_on_submit():
-        nombre = form.nombre.data
-        fecha_nacimiento = form.fecha_nacimiento.data
-        edad = form.edad.data
-        id_especie = form.id_especie.data
-        id_habitat = form.id_habitat.data
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        fecha_nacimiento = request.form['fecha_nacimiento']
+        edad = request.form['edad']
+        id_especie = request.form['id_especie']
+        id_habitat = request.form['id_habitat']
 
         if 'imagen' in request.files:
-            imagen = form.imagen.data  # Accede a los datos del archivo
-
+            imagen = request.files['imagen']
+            
             extensiones = {'png', 'jpg', 'jpeg'}
             if '.' in imagen.filename and imagen.filename.rsplit('.', 1)[1].lower() in extensiones:
-                datos_imagen = imagen.read()
+                datos_imagen = imagen.read()  # Lee los datos binarios de la imagen
                 filename = imagen.filename
                 ruta_imagen = os.path.join("./static/img", filename)
-                imagen.save(ruta_imagen)
+                
 
                 animal = Animal(nombre_animal=nombre, fecha_nacimiento=fecha_nacimiento, edad=edad, id_especie=id_especie, id_habitat=id_habitat, nombre_Imagen=ruta_imagen, imagen=datos_imagen)
-
                 db.session.add(animal)
                 db.session.commit()
 
@@ -63,69 +58,53 @@ def insertarAnimal():
                 return redirect(url_for('index'))
             else:
                 flash('Extensión de archivo no permitida')
+                return redirect(url_for('index'))
         else:
             flash('Error al cargar la imagen del animal')
-    else:
-        flash('Error en el formulario')
-        for field, errors in form.errors.items():
-            for error in errors:
-                flash(f'Error en el campo {getattr(form, field).label.text}: {error}')
-
-    return redirect(url_for('index'))
-
+            return redirect(url_for('index'))
 
             
 @app.route('/insertarEspecie', methods=['POST'])
 def insertarEspecie():
-    form = EspecieForm()
-
-    if form.validate_on_submit():
-        nombre = form.nombre.data
-        descripcion = form.descripcion.data
-
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        descripcion = request.form['descripcion']
+    
         nueva_especie = Especie(nombre_especie=nombre, descripcion=descripcion)
         db.session.add(nueva_especie)
         db.session.commit()
-
-        flash('Especie añadida correctamente', 'success')
+        flash('Especie añadido correctamente')
         return redirect(url_for('index'))
     else:
-         flash('Error')
-         for field, errors in form.errors.items():
-            for error in errors:
-                flash(f'Error en el campo {getattr(form, field).label.text}: {error}')
-    return redirect(url_for('index'))
+                flash('Fallo al añadir especie')
+                return redirect(url_for('index'))
 
 @app.route('/insertarHabitat', methods=['POST'])
 def insertarHabitat():
-    form = HabitatForm()
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        
+        if 'imagen' in request.files:
+            imagen = request.files['imagen']
+            
+            extensiones = {'png', 'jpg', 'jpeg'}
+            if '.' in imagen.filename and imagen.filename.rsplit('.', 1)[1].lower() in extensiones:
+                datos_imagen = imagen.read()  # Lee los datos binarios de la imagen
+                filename = imagen.filename
+                ruta_imagen = os.path.join("./static/img", filename)
+                
 
-    if form.validate_on_submit():
-        nombre = form.nombre.data
+                nuevo_habitat = Habitat(nombre_habitat=nombre, nombre_imagen=ruta_imagen, imagen_habitat=datos_imagen)
+                db.session.add(nuevo_habitat)
+                db.session.commit()
+                
+                flash('Habitat añadido correctamente')
+            else:
+                flash('Extensión de archivo no permitida')
+        else:
+            flash('Error al cargar la imagen del hábitat')
 
-        nuevo_habitat = Habitat(nombre_habitat=nombre)
-
-        # Manejar la imagen si se proporciona
-        if form.imagen.data:
-            imagen = form.imagen.data
-            datos_imagen = imagen.read()
-            filename = secure_filename(imagen.filename)
-            ruta_imagen = os.path.join("./static/img", filename)
-            imagen.save(ruta_imagen)
-            nuevo_habitat.nombre_imagen = ruta_imagen
-            nuevo_habitat.imagen_habitat = datos_imagen
-
-        db.session.add(nuevo_habitat)
-        db.session.commit()
-
-        flash('Habitat añadido correctamente', 'success')
-    else:
-       flash('Error')
-       for field, errors in form.errors.items():
-            for error in errors:
-                flash(f'Error en el campo {getattr(form, field).label.text}: {error}')
     return redirect(url_for('index'))
-
 
 
 
@@ -193,8 +172,9 @@ def imagen_habitat(id):
 @app.route('/animalesHabitat/<int:habitat_id>')
 def animalesHabitat(habitat_id):
     # Aquí obtienes los animales que pertenecen al hábitat con el ID proporcionado
+    # Supongamos que tienes una relación en tu modelo que conecta hábitats con animales
     habitat = Habitat.query.get(habitat_id)
-    animales_en_habitat = habitat.animales
+    animales_en_habitat = habitat.animales  # Ajusta esto según tu modelo
 
     return render_template('animalesHabitat.html', habitat=habitat, animales=animales_en_habitat)
 
@@ -204,6 +184,8 @@ def animalesPorEspecie(especie_id):
     animales_por_especie = especie.animales  
 
     return render_template('animalesPorEspecie.html', especie=especie, animales=animales_por_especie)
+
+
 @app.route('/eliminar/<id>', methods=['GET', 'POST'])
 def eliminar(id):
     animal = Animal.query.get(id)
@@ -213,5 +195,4 @@ def eliminar(id):
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.config['WTF_CSRF_ENABLED'] = False
     app.run(debug=True)
